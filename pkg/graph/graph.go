@@ -111,7 +111,7 @@ func ComputeParallel(p float64, nodes []rbo.Node) ([]Edge, error) {
 
 // ComputePool computes with a pool
 func ComputePool(p float64, nodes []rbo.Node) ([]Edge, error) {
-	pool := NewPool(50)
+	pool := NewPool(100)
 	for i := range nodes {
 		for j := range nodes {
 			if i == j {

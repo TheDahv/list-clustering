@@ -137,9 +137,6 @@ func BenchmarkCompute100(b *testing.B) {
 func BenchmarkCompute1000(b *testing.B) {
 	runBenchmark(1000, b)
 }
-
-/*
 func BenchmarkCompute5000(b *testing.B) {
 	runBenchmark(5000, b)
 }
-*/

@@ -154,7 +154,7 @@ func TestOverlap(t *testing.T) {
 	}
 }
 
-func TestIntersection(t *testing.T) {
+func TestIntersectionLength(t *testing.T) {
 	a := []string{
 		"one",
 		"two",
@@ -166,15 +166,9 @@ func TestIntersection(t *testing.T) {
 		"four",
 	}
 
-	intersect := intersection(a, b)
-	if l := len(intersect); l != 2 {
+	intersect := intersectionLength(a, b)
+	if l := intersect; l != 2 {
 		t.Errorf("expected 2 entries, got %d", l)
-	}
-
-	for _, entry := range intersect {
-		if !(entry == "two" || entry == "three") {
-			t.Errorf("got unexpected entry: %s", entry)
-		}
 	}
 }
 
@@ -214,4 +208,28 @@ func TestMin(t *testing.T) {
 			}
 		})
 	}
+}
+
+func benchmarkIntersectOfSize(size int, b *testing.B) {
+	x := make([]string, size)
+	y := make([]string, size)
+
+	entry := "entry"
+	for i := 0; i < size; i++ {
+		x[i] = entry
+		y[i] = entry
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		intersectionLength(x, y)
+	}
+}
+
+func BenchmarkInstersectionLength10(b *testing.B) {
+	benchmarkIntersectOfSize(10, b)
+}
+
+func BenchmarkInstersectionLength1000(b *testing.B) {
+	benchmarkIntersectOfSize(1000, b)
 }

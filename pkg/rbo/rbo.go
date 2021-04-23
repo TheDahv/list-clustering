@@ -5,6 +5,8 @@ package rbo
 import (
 	"fmt"
 	"math"
+
+	"github.com/segmentio/fasthash/fnv1a"
 )
 
 // Node allows any struct to implement a node for RBO calculation. It must be
@@ -135,12 +137,10 @@ func agreement(a, b Node, depth int) float64 {
 // assumes a.Members and b.Members are unique, satisfying the expectation the
 // lists behave as a Set
 func rawOverlap(a, b Node, depth int) (int, int, int) {
-	// Copies exist so we can sort without modifying the original
 	aMembers := a.Set()[:min(depth, a.Length())]
 	bMembers := b.Set()[:min(depth, b.Length())]
 
-	intersect := intersection(aMembers, bMembers)
-	return len(intersect), len(aMembers), len(bMembers)
+	return intersectionLength(aMembers, bMembers), len(aMembers), len(bMembers)
 }
 
 func min(nums ...int) int {
@@ -154,16 +154,17 @@ func min(nums ...int) int {
 	return min
 }
 
-func intersection(a, b []string) []string {
-	var intersect = make([]string, len(a)*2)
-	h := make(map[string]bool)
+func intersectionLength(a, b []string) int {
+	var intersect int
+	h := make(map[uint64]bool)
+
 	for _, m := range a {
-		h[m] = true
+		h[fnv1a.HashString64(m)] = true
 	}
 
 	for _, m := range b {
-		if _, ok := h[m]; ok {
-			intersect = append(intersect, m)
+		if _, ok := h[fnv1a.HashString64(m)]; ok {
+			intersect++
 		}
 	}
 

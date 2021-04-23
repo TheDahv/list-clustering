@@ -32,7 +32,7 @@ func NewPool(concurrency int) *Pool {
 		concurrency: concurrency,
 		errors:      make(chan error, 10),
 		work:        make(chan Task, 100),
-		results:     make(chan Edge, 50),
+		results:     make(chan Edge, 100),
 	}
 
 	for i := 0; i < concurrency; i++ {
